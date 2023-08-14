@@ -8,11 +8,19 @@ const { ObjectId } = mongoose.Types;
 //create course
 router.post("/createcourse", async (req, res) => {
   try {
-    const { name, id, instructor, category } = req.body;
-    const course = new CourseModel({ name, id, instructor, category });
-    await course.save();
+    const { name, id, instructorEmail, category, videoLinks } = req.body;
+    const instructor = await UserModel.findOne({ email: instructorEmail });
+    if (!instructor) {
+      return res
+        .status(400)
+        .json({ message: "This instructor doesn't exist." });
+    }
+    const course = new CourseModel({ name, id, instructor, category, videos: videoLinks });
 
-    return res.json({ message: "Course is successfully added." });
+    await course.save();
+    await instructor.updateOne({ $push: { courses: course } });
+
+    return res.json({ message: "Course is successfully created." });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
