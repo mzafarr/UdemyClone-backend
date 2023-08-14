@@ -1,439 +1,174 @@
-# API Documentation
+### 1. Create Course
+**Endpoint:** POST `/Course/createcourse`
 
-## Base URL
-
-```
-https://api.yourdomain.com
-```
-
-## Endpoints
-
-### Authentication Guide
-
-To obtain an authentication token, make a `POST` request to the following endpoint:
-
-**Endpoint:**
-
-```
-POST /User/signin
-```
+**Description:** This API is used to create a new course and associate it with an instructor.
 
 **Request Body:**
+- `name`: Name of the course.
+- `id`: Unique identifier for the course.
+- `instructorEmail`: Email of the instructor associated with the course.
+- `category`: Category of the course.
 
+**Example Request:**
 ```json
+POST /Course/createcourse
 {
-  "email": "your_email@example.com",
-  "password": "your_password"
+  "name": "Introduction to Programming",
+  "id": "course123",
+  "instructorEmail": "instructor@example.com",
+  "category": "Programming"
 }
 ```
 
 **Response:**
+- 200 OK: Course created successfully.
+- 400 Bad Request: Instructor not found.
 
-```json
-{
-  "message": "Successfully signed in",
-  "token": "your_auth_token",
-  "email": "your_email@example.com"
-}
-```
-
-### Create User (Signup)
-
-Creates a new user account.
-
-**Endpoint:**
-
-```
-POST /User/signup
-```
-
-**Request Body:**
-
-```json
-{
-  "name": "User Name",
-  "email": "user@example.com",
-  "password": "user_password",
-  "type": "student"
-}
-```
-
-**Response:**
-
-```json
-{
-  "message": "User registered successfully"
-}
-```
-
-### List Courses by User
-
-Retrieve courses associated with a specific user.
-
-**Endpoint:**
-
-```
-GET /Course/courses/:userId
-```
-
-**Parameters:**
-
-- `userId` (required): The ID of the user.
-
-**Response:**
-
-```json
-[
-  {
-    "id": "course_id",
-    "name": "Course Name",
-    "description": "Course Description",
-    // ... other fields
-  },
-  // ... other courses
-]
-```
-
-### Search Courses
-
-Search for courses based on a search query.
-
-**Endpoint:**
-
-```
-GET /Course/searchCourses?query=search_term
-```
-
-**Parameters:**
-
-- `query` (optional): The search query.
-
-**Response:**
-
-```json
-[
-  {
-    "id": "course_id",
-    "name": "Course Name",
-    "description": "Course Description",
-    // ... other fields
-  },
-  // ... other courses
-]
-```
-
-### Get Course Details
-
-Retrieve details of a specific course.
-
-**Endpoint:**
-
-```
-GET /Course/course/:id
-```
-
-**Parameters:**
-
-- `id` (required): The ID of the course.
-
-**Response:**
-
-```json
-{
-  "id": "course_id",
-  "name": "Course Name",
-  "description": "Course Description",
-  // ... other fields
-}
-```
-
-### Enroll Course
-
-Enroll a student in a course.
-
-**Endpoint:**
-
-```
-PUT /Course/enrollcourse/:id
-```
-
-**Parameters:**
-
-- `id` (required): The ID of the course.
-
-**Request Body:**
-
-```json
-{
-  "studentEmail": "student@example.com"
-}
-```
-
-**Response:**
-
-```json
-{
-  "message": "Course is successfully enrolled."
-}
-```
-
-### Add Course for Instructor
-
-Add a course for an instructor.
-
-**Endpoint:**
-
-```
-PUT /Course/addcourse/:id
-```
-
-**Parameters:**
-
-- `id` (required): The ID of the course.
-
-**Request Body:**
-
-```json
-{
-  "instructorEmail": "instructor@example.com"
-}
-```
-
-**Response:**
-
+**Example Response:**
 ```json
 {
   "message": "Course is successfully added."
 }
 ```
 
-## Error Handling
+### 2. Enroll Course 
+**Endpoint:** PUT `/Course/enrollcourse/:id`
 
-In case of errors, the API will return appropriate HTTP status codes along with error details in the response body.
+**Description:** This API allows a student to enroll in a course.
 
-- `400 Bad Request`: Invalid request format or missing required fields.
-- `401 Unauthorized`: Authentication token is missing or invalid.
-- `403 Forbidden`: Access to the resource is not allowed.
-- `404 Not Found`: The requested resource does not exist.
-- `500 Internal Server Error`: An unexpected error occurred on the server.
-
-# Example API Calls
-Of course! I've included example codes for each endpoint in the documentation. Here's the updated documentation in Markdown format with the example codes:
-
-```markdown
-# API Documentation
-
-Welcome to the documentation for the **Course Management API**. This guide provides detailed information on how to use the API endpoints. It is intended for frontend developers to integrate the API into their applications seamlessly.
-
-## Base URL
-
-```
-https://api.yourdomain.com
-```
-
-## Endpoints
-
-### Authentication Guide
-
-To obtain an authentication token, make a `POST` request to the following endpoint:
-
-**Endpoint:**
-
-```
-POST /User/signin
-```
+**URL Parameters:**
+- `id`: The ID of the course to enroll in.
 
 **Request Body:**
+- `studentEmail`: Email of the student enrolling in the course.
 
+**Example Request:**
 ```json
+PUT /Course/enrollcourse/course123
 {
-  "email": "your_email@example.com",
-  "password": "your_password"
+  "studentEmail": "student@example.com"
 }
 ```
 
-**Example API Call using JavaScript Fetch:**
+**Response:**
+- 200 OK: Enrollment successful.
+- 400 Bad Request: Course or student not found, or student is already enrolled.
 
-```javascript
-const signInData = {
-  email: "user@example.com",
-  password: "user_password"
-};
-
-fetch('<your_base_url>/User/signin', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify(signInData)
-})
-.then(response => response.json())
-.then(data => {
-  const authToken = data.token;
-  console.log('Authentication token:', authToken);
-})
-.catch(error => {
-  console.error('Error:', error);
-});
-```
-
-### Create User (Signup)
-
-Creates a new user account.
-
-**Endpoint:**
-
-```
-POST /User/signup
-```
-
-**Request Body:**
-
+**Example Response:**
 ```json
 {
-  "name": "User Name",
-  "email": "user@example.com",
-  "password": "user_password",
-  "type": "student"
+  "message": "Course is successfully enrolled."
 }
 ```
 
-**Example API Call using JavaScript Fetch:**
+### 3. View Course Authentication API
+**Endpoint:** GET `/Course/course/:id`
 
-```javascript
-const signUpData = {
-  name: "User Name",
-  email: "user@example.com",
-  password: "user_password",
-  type: "student"
-};
+**Description:** This API checks if a student is authorized to view a specific course.
 
-fetch('<your_base_url>/User/signup', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
+**URL Parameters:**
+- `id`: The ID of the course to check authorization for.
+
+**Request Body:**
+- `userEmail`: Email of the student.
+
+**Example Request:**
+```json
+GET /Course/course/course123
+{
+  "userEmail": "student@example.com"
+}
+```
+
+**Response:**
+- 200 OK: Student authorized to view the course.
+- 200 OK: Student not authorized to view the course.
+
+**Example Response (Authorized):**
+```json
+{
+  "authorized": true
+}
+```
+
+### 4. Show User's Courses API
+**Endpoint:** GET `/Course/courses/:userId`
+
+**Description:** This API fetches the courses that a specific user is enrolled in.
+
+**URL Parameters:**
+- `userId`: The ID of the user whose courses are to be retrieved.
+
+**Response:**
+- 200 OK: List of courses the user is enrolled in.
+
+**Example Response:**
+```json
+[
+  {
+    "_id": "course123",
+    "name": "Introduction to Programming",
+    "category": "Programming",
+    "instructor": "instructorId"
   },
-  body: JSON.stringify(signUpData)
-})
-.then(response => response.json())
-.then(data => {
-  console.log('Response:', data.message);
-})
-.catch(error => {
-  console.error('Error:', error);
-});
+  // Other course objects
+]
 ```
 
-# Example API Calls
-1. **Authentication: Sign In**
+### 5. Search Courses API
+**Endpoint:** GET `/Course/searchCourses`
 
-```javascript
-const signInData = {
-  email: "user@example.com",
-  password: "user_password"
-};
+**Description:** This API allows searching for courses based on a search term.
 
-fetch('<your_base_url>/User/signin', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
+**Query Parameter:**
+- `term`: The search term to match courses against.
+
+**Response:**
+- 200 OK: List of courses matching the search term.
+
+**Example Request:**
+```json
+GET /Course/searchCourses?term=Programming
+```
+
+**Example Response:**
+```json
+[
+  {
+    "_id": "course123",
+    "name": "Introduction to Programming",
+    "category": "Programming",
+    "instructor": "instructorId"
   },
-  body: JSON.stringify(signInData)
-})
-.then(response => response.json())
-.then(data => {
-  const authToken = data.token;
-  console.log('Authentication token:', authToken);
-})
-.catch(error => {
-  console.error('Error:', error);
-});
+  // Other course objects
+]
 ```
 
-2. **Create User (Signup)**
+### 6. Show Courses by Category API
+**Endpoint:** GET `/Course/courses/:category`
 
-```javascript
-const signUpData = {
-  name: "User Name",
-  email: "user@example.com",
-  password: "user_password",
-  type: "student"
-};
+**Description:** This API fetches courses based on a selected category.
 
-fetch('<your_base_url>/User/signup', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
+**URL Parameters:**
+- `category`: The category of courses to retrieve.
+
+**Response:**
+- 200 OK: List of courses in the specified category.
+
+**Example Request:**
+```json
+GET /Course/courses?category=Programming
+```
+
+**Example Response:**
+```json
+[
+  {
+    "_id": "course123",
+    "name": "Introduction to Programming",
+    "category": "Programming",
+    "instructor": "instructorId"
   },
-  body: JSON.stringify(signUpData)
-})
-.then(response => response.json())
-.then(data => {
-  console.log('Response:', data.message);
-})
-.catch(error => {
-  console.error('Error:', error);
-});
+  // Other course objects
+]
 ```
-
-3. **List Courses by User**
-
-```javascript
-const userId = 'user_id'; // Replace with the actual user ID
-
-fetch(`<your_base_url>/Course/courses/${userId}`, {
-  method: 'GET',
-  headers: {
-    'Authorization': `Bearer <your_auth_token>`
-  }
-})
-.then(response => response.json())
-.then(courses => {
-  console.log('Courses:', courses);
-})
-.catch(error => {
-  console.error('Error:', error);
-});
-```
-
-4. **Search Courses**
-
-```javascript
-const searchTerm = 'programming';
-
-fetch(`<your_base_url>/Course/searchCourses?term=${searchTerm}`, {
-  method: 'GET',
-  headers: {
-    'Authorization': `Bearer <your_auth_token>`
-  }
-})
-.then(response => response.json())
-.then(courses => {
-  console.log('Courses:', courses);
-})
-.catch(error => {
-  console.error('Error:', error);
-});
-```
-
-5. **Get Course Details**
-
-```javascript
-const courseId = 'course_id'; // Replace with the actual course ID
-
-fetch(`<your_base_url>/Course/course/${courseId}`, {
-  method: 'GET',
-  headers: {
-    'Authorization': `Bearer <your_auth_token>`
-  }
-})
-.then(response => response.json())
-.then(course => {
-  console.log('Course:', course);
-})
-.catch(error => {
-  console.error('Error:', error);
-});
-```
-
-These examples demonstrate how to use the `fetch` function to make API calls to each of the provided endpoints. Remember to handle the responses and errors appropriately in your application.
