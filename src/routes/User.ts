@@ -57,6 +57,4 @@ const verifyToken = (req, res, next) => {
   }
 };
 
-
-module.exports = app;
 export { router as userRouter, verifyToken };
