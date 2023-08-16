@@ -17,14 +17,25 @@ app.use(cookieParser());
 app.use("/User", userRouter);
 app.use("/Course", CourseRouter);
 
-// Connect to MongoDB
-mongoose.connect(process.env.DATABASE);
+const PORT = process.env.PORT || 3000;
 
-// Check if the connection was successful
-mongoose.connection.on("connected", () => {
-  console.log("Connected to MongoDB");
+const connectDB = async () => {
+  try {
+    const conn = await mongoose.connect(process.env.DATABASE);
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
+  } catch (error) {
+    console.log(error);
+    process.exit(1);
+  }
+};
+//Routes go here
+app.all("*", (req, res) => {
+  res.json({ "every thing": "is awesome" });
 });
 
-app.listen(process.env.PORT || 3001, () => {
-  console.log("server is running");
+//Connect to the database before listening
+connectDB().then(() => {
+  app.listen(PORT, () => {
+    console.log("listening for requests");
+  });
 });
