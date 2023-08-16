@@ -27,8 +27,14 @@ exports.CourseModel = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
 const CourseSchema = new mongoose_1.default.Schema({
     name: { type: String, required: true },
-    id: { type: String, required: true, unique: true },
-    students: [{ type: mongoose_1.Schema.Types.ObjectId, ref: 'Student', required: true }],
-    instructor: { type: mongoose_1.Schema.Types.ObjectId, ref: 'Instructor', required: true },
+    students: [{ type: mongoose_1.Schema.Types.ObjectId, ref: "Student", required: true }],
+    instructor: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: "Instructor",
+        required: true,
+    },
+    videos: [{ type: String }],
+    category: { type: String, required: true },
 });
+CourseSchema.index({ name: "text" });
 exports.CourseModel = mongoose_1.default.model("Course", CourseSchema);

@@ -14,29 +14,36 @@ router.post("/signup", async (req, res) => {
     const { name, email, password, type } = req.body;
     const user = await User_1.UserModel.findOne({ email });
     if (user) {
-        return res.status(400).json({ message: "account with this email already exists" });
+        return res
+            .status(400)
+            .json({ message: "account with this email already exists" });
     }
     const hashedPassword = await bcrypt_1.default.hash(password, 10);
-    const newUser = new User_1.UserModel({ name, email, password: hashedPassword, type });
+    const newUser = new User_1.UserModel({
+        name,
+        email,
+        password: hashedPassword,
+        type,
+    });
     await newUser.save();
-    res.json({ message: "User registered successfully" });
+    return res.json({ message: "User registered successfully" });
 });
 router.post("/signin", async (req, res) => {
     const { email, password } = req.body;
     const user = await User_1.UserModel.findOne({ email });
     if (!user) {
-        return res
-            .status(400)
-            .json({ message: "email or password is incorrect" });
+        return res.status(400).json({ message: "email or password is incorrect" });
     }
     const isPasswordValid = await bcrypt_1.default.compare(password, user.password);
     if (!isPasswordValid) {
-        return res
-            .status(400)
-            .json({ message: "email or password is incorrect" });
+        return res.status(400).json({ message: "email or password is incorrect" });
     }
     const token = jsonwebtoken_1.default.sign({ email: user.email }, "secret");
-    res.json({ token, email: user.email });
+    return res.json({
+        message: "Successfully signed in",
+        token,
+        email: user.email,
+    });
 });
 const verifyToken = (req, res, next) => {
     const authHeader = req.headers.authorization;
