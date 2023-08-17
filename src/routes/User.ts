@@ -5,7 +5,12 @@ const router = express.Router();
 import { UserModel } from "../models/User";
 
 router.post("/signup", async (req, res) => {
-  const { name, email, password, type } = req.body;
+  let { name, email, password, type } = req.body;
+  type = type
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z]/g, "");
+    
   const user = await UserModel.findOne({ email });
   if (user) {
     return res
