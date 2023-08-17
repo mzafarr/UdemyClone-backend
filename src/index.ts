@@ -18,7 +18,7 @@ app.use("/Course", CourseRouter);
 const PORT = process.env.PORT || 3000;
 
 // Connect to MongoDB
-mongoose.connect(process.env.DATABASE);
+mongoose.connect('mongodb+srv://mzafar611:mzafar611@cluster0.blpxif2.mongodb.net/?retryWrites=true&w=majority');
 
 // Check if the connection was successful
 mongoose.connection.on("connected", () => {
